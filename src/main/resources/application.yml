@@ -6,7 +6,7 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/gregturn/learning-spring-boot-config-repo
+          uri: https://bitbucket.scm.otto.de/scm/pport/lsb2-config-data.git
 
 # tag::secured[]
 security:
