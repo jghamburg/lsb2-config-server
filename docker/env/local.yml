@@ -1,0 +1,43 @@
+# environment variables for any dev environment
+version: '3'
+
+services:
+  # service name has to be environment-unique, else one startup will shutdown others
+  local-config-server:
+    labels:
+      de.otto.template.description: "Configuration Server for local environment"
+      de.otto.drop.brandshopupdater.version: "local"
+    image: "config-server:local"
+    build:
+      context: ../..
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - "8888:8888" # web port
+    environment:
+      PROFILE: "local"
+      OTTO_GROUP: "local"
+    volumes:
+      - /Users/jgellien/git/learning-spring-boot-config-repo:/gitrepo
+    networks:
+      - learn-ms-network
+
+  local-mongo-server:
+    image: "mongo:3.6"
+    ports:
+      - "27017:27017"
+    networks:
+      - learn-ms-network
+
+  local-rabbitmq:
+    image: "rabbitmq:3.7-management-alpine"
+    ports:
+      - "5672:5672" # web port
+      - "15672:15672" # web management port
+    networks:
+      - learn-ms-network
+
+networks:
+  learn-ms-network:
+    external: true
+
+
