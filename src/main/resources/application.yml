@@ -7,7 +7,8 @@ spring:
       server:
         git:
           uri: https://bitbucket.scm.otto.de/scm/pport/lsb2-config-data.git
-
+          skipSslValidation: true
+          timeout: 5 # secs
 # tag::secured[]
 security:
   user:
