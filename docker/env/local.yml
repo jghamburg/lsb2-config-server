@@ -16,8 +16,9 @@ services:
     environment:
       PROFILE: "local"
       OTTO_GROUP: "local"
+      CONFIG_SERVER_URI: "file:///gitrepo"
     volumes:
-      - /Users/jgellien/git/learning-spring-boot-config-repo:/gitrepo
+      - /Users/jgellien/git/PPORT/lsb2-config-data:/gitrepo
     networks:
       - learn-ms-network
 

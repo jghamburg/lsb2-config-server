@@ -14,7 +14,8 @@ RUN apk update && apk upgrade && \
 ENV PROFILE default
 ENV TZ CET
 ENV SECURITY_JWT_SECRET=""
-
+# used for local git repo
+Volume /gitrepo
 # create user with defined user-id and set rights to volume for user
 RUN adduser -D -u 1000 app && echo "app:ppa" | chpasswd
 
