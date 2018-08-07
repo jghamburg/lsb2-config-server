@@ -35,5 +35,15 @@ public class LearningSpringBootConfigServer {
 		SpringApplication.run(
 			LearningSpringBootConfigServer.class, args);
 	}
+
+	@Bean
+	UserDetailsService userDetailsService() {
+		return new InMemoryUserDetailsManager(
+			User.withDefaultPasswordEncoder()
+			.username("user")
+			.password("password")
+			.roles("USER").build());
+	}
+
 }
 // end::code[]

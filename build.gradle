@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '2.0.3.RELEASE'
+		springBootVersion = '2.0.4.RELEASE'
 		springCloudVersion = 'Finchley.RELEASE'
 	}
 	repositories {
@@ -34,7 +34,7 @@ repositories {
 }
 
 jar {
-	baseName = 'learning-spring-boot-eureka-server'
+	baseName = 'learning-spring-boot-config-server'
 	version = '0.0.1-SNAPSHOT'
 }
 
