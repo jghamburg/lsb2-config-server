@@ -6,7 +6,7 @@ spring:
     config:
       server:
         git:
-          uri: file:///User/jgellien/git/PPORT/lsb2-config-data
+          uri: file:///Users/jgellien/git/PPORT/lsb2-config-data
 #          uri: https://bitbucket.scm.otto.de/scm/pport/lsb2-config-data.git
 #          skipSslValidation: true
 #          timeout: 5 # secs
