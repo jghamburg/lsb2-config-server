@@ -1,4 +1,7 @@
 .gradle
 .idea
-.gradletasknamecache
 *.iml
+*.ipr
+*.iws
+.gradletasknamecache
+out
