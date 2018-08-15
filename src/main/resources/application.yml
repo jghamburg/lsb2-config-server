@@ -28,6 +28,23 @@ spring:
 #          uri: https://bitbucket.scm.otto.de/scm/pport/lsb2-config-data.git
 #          skipSslValidation: true
 #          timeout: 5 # secs
+#
+# details on endpoints: https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html#production-ready-endpoints-exposing-endpoints
+management:
+  endpoints:
+    enabled-by-default: true
+    web:
+      base-path: /actuator
+      exposure:
+        include: "*"
+        exclude: shutdown
+  endpoint:
+    health:
+      show-details: always
+  health:
+    defaults:
+      enabled: true
+
 # tag::secured[]
 security:
   user:
