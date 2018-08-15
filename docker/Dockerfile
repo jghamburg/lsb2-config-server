@@ -2,6 +2,11 @@
 FROM docker.obc.ov.otto.de/base/openjdk:8-jre-alpine
 MAINTAINER Joerg Gellien <joerg.gellien@otto.de>
 
+ARG JAR_FILE
+
+ENV PROFILE default
+ENV TZ CET
+
 # set date
 RUN apk --no-cache add bash git openssh tzdata net-tools \
 	&& cp /usr/share/zoneinfo/Europe/Berlin /etc/localtime \
@@ -9,20 +14,17 @@ RUN apk --no-cache add bash git openssh tzdata net-tools \
 	&& apk del tzdata
 # set date
 
-# service port from outside is important if we want to use eureka one time, then port mapping has to be 1:1
-ENV PROFILE default
-ENV TZ CET
-ENV SECURITY_JWT_SECRET=""
 # used for local git repo
 Volume /gitrepo
 # create user with defined user-id and set rights to volume for user
 RUN adduser -D -u 1000 app && echo "app:ppa" | chpasswd
 
 COPY ./docker/run.sh /run.sh
-COPY ./build/libs/*.jar /app/app.jar
+COPY ${JAR_FILE} /app/app.jar
 
 RUN chmod 700 /*.sh \
-	&& mkdir -p /app && chown -R app:app /app && \
+	&& mkdir -p /app \
+	&& chown -R app:app /app \
 	&& chown -R app:app /run.sh \
 	&& chmod +x /run.sh
 

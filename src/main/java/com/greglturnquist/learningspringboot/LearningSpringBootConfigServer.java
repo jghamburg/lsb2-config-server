@@ -22,6 +22,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 /**
  * @author Greg Turnquist
@@ -44,6 +47,22 @@ public class LearningSpringBootConfigServer {
 			.password("password")
 			.roles("USER").build());
 	}
+
+  @Configuration
+  protected static class SecurityPolicy extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http
+          .authorizeRequests()
+          .antMatchers("/actuator/**").permitAll()
+          .anyRequest().authenticated()
+          .and()
+          .httpBasic()
+          .and()
+          .csrf().disable();
+    }
+  }
 
 }
 // end::code[]

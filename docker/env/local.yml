@@ -1,21 +1,22 @@
 # environment variables for any dev environment
-version: '3'
+version: '3.1'
 
 services:
   # service name has to be environment-unique, else one startup will shutdown others
   local-config-server:
     labels:
-      de.otto.template.description: "Configuration Server for local environment"
-      de.otto.drop.brandshopupdater.version: "local"
+      com.gregturnquist.learningspringboot.template.description: "Configuration Server for local environment"
+      com.gregturnquist.learningspringboot.version: "local"
     image: "config-server:local"
     build:
       context: ../..
       dockerfile: ./docker/Dockerfile
+      args:
+        JAR_FILE: ./build/libs/lsb2-config-server.jar
     ports:
       - "8888:8888" # web port
     environment:
       PROFILE: "local"
-      OTTO_GROUP: "local"
       CONFIG_SERVER_URI: "file:///gitrepo"
     volumes:
       - /Users/jgellien/git/PPORT/lsb2-config-data:/gitrepo
