@@ -1,6 +1,7 @@
 buildscript {
 	ext {
 		springCloudVersion = 'Finchley.RELEASE'
+    activeSpringProfiles = 'local'
 	}
 }
 
@@ -12,6 +13,7 @@ plugins {
 	id 'idea'
 	id 'java-gradle-plugin'
 	id 'com.avast.gradle.docker-compose' version '0.8.4'
+  id 'com.google.cloud.tools.jib' version '0.9.8'
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -62,6 +64,23 @@ dockerCompose {
 }
 composeBuild.dependsOn bootJar
 composeUp.dependsOn composeBuild
+
+jib {
+  from {
+    image = 'docker.obc.ov.otto.de/base/openjdk:8-jre-alpine'
+  }
+  to {
+    image = "docker.obc.ov.otto.de/jib/lsb2-config-server:local"
+//    credHelper = 'osxkeychain'
+  }
+  container {
+    jvmFlags = ['-Djava.security.egd=file:/dev/./urandom', '-Xms512m', '-Xdebug', "-Dspring.profiles.active=${activeSpringProfiles}"]
+    mainClass = 'com.greglturnquist.learningspringboot.LearningSpringBootConfigServer'
+    args = []
+    ports = ['8888']
+    format = 'OCI'
+  }
+}
 
 configurations {
 	all*.exclude group: 'ch.qos.logback', module: 'logback-classic'
