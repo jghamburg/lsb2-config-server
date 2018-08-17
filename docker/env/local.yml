@@ -17,9 +17,9 @@ services:
       - "8888:8888" # web port
     environment:
       PROFILE: "local"
-      CONFIG_SERVER_URI: "file:///gitrepo"
+      CONFIG_SERVER_GIT_URI: "/gitrepo"
     volumes:
-      - /Users/jgellien/git/PPORT/lsb2-config-data:/gitrepo
+      - ${HOME}/git/PPORT/lsb2/lsb2-config-data:/gitrepo
     networks:
       - learn-ms-network
 

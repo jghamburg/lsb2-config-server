@@ -8,7 +8,7 @@ buildscript {
 plugins {
 	id 'org.springframework.boot' version '2.0.4.RELEASE' apply true
 	// tag::gradle-git[]
-	id 'com.gorylenko.gradle-git-properties' version '1.4.17'
+	id 'com.gorylenko.gradle-git-properties' version '1.5.1'
 	// end::gradle-git[]
 	id 'idea'
 	id 'java-gradle-plugin'

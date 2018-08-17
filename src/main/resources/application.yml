@@ -12,7 +12,7 @@ management:
         exclude: shutdown
   endpoint:
     health:
-      show-details: always
+      show-details: always # never always
   health:
     defaults:
       enabled: true
@@ -23,7 +23,7 @@ spring:
     config:
       server:
         git:
-          uri: ${CONFIG_SERVER_URI:-file:///Users/jgellien/git/PPORT/lsb2/lsb2-config-data}
+          uri: ${CONFIG_SERVER_GIT_URI:${HOME}/git/PPORT/lsb2/lsb2-config-data}
           clone-on-start: false
 #          uri: https://bitbucket.scm.otto.de/scm/pport/lsb2-config-data.git
 #          skipSslValidation: true
