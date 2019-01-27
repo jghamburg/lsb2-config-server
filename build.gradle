@@ -1,12 +1,12 @@
 buildscript {
-	ext {
-		springCloudVersion = 'Finchley.RELEASE'
+  ext {
+		springCloudVersion = 'Greenwich.RELEASE'
     activeSpringProfiles = 'local'
 	}
 }
 
 plugins {
-	id 'org.springframework.boot' version '2.0.4.RELEASE' apply true
+	id 'org.springframework.boot' version '2.1.2.RELEASE' apply true
 	// tag::gradle-git[]
 	id 'com.gorylenko.gradle-git-properties' version '1.5.1'
 	// end::gradle-git[]
@@ -71,10 +71,12 @@ jib {
   }
   to {
     image = 'jghamburg/lsb2-config-server:local'
-    auth{
-      username = dockerRegistryUsername
-      password = dockerRegistryPassword
-    }
+    // use values from $HOME/.gradle/gradle.properties
+//    auth{
+//      username = dockerRegistryUsername
+//      password = dockerRegistryPassword
+//    }
+    credHelper = 'osxkeychain'
   }
   container {
     jvmFlags = ['-Djava.security.egd=file:/dev/./urandom', '-Xms512m', '-Xdebug', "-Dspring.profiles.active=${activeSpringProfiles}".toString()]

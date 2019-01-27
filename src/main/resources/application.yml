@@ -23,9 +23,9 @@ spring:
     config:
       server:
         git:
-          uri: ${CONFIG_SERVER_GIT_URI:${HOME}/git/PPORT/lsb2/lsb2-config-data}
+          uri: ${CONFIG_SERVER_GIT_URI:${HOME}/git/lsb2/lsb2-config-data}
           clone-on-start: false
-#          uri: https://bitbucket.scm.otto.de/scm/pport/lsb2-config-data.git
+#          uri: https://github.com/jghamburg/lsb2-config-data.git
 #          skipSslValidation: true
 #          timeout: 5 # secs
 # tag::secured[]

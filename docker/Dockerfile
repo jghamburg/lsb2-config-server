@@ -6,13 +6,6 @@ ARG JAR_FILE
 ENV PROFILE default
 ENV TZ CET
 
-# set date
-RUN apk --no-cache add bash git openssh tzdata net-tools \
-	&& cp /usr/share/zoneinfo/Europe/Berlin /etc/localtime \
-	&& echo "Europe/Berlin" >  /etc/timezone \
-	&& apk del tzdata
-# set date
-
 # used for local git repo
 Volume /gitrepo
 # create user with defined user-id and set rights to volume for user
