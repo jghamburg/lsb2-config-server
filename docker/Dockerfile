@@ -1,6 +1,5 @@
 # Build the final Image only with JRE and built App Jar
-FROM docker.obc.ov.otto.de/base/openjdk:8-jre-alpine
-MAINTAINER Joerg Gellien <joerg.gellien@otto.de>
+FROM openjdk:8-jre-alpine
 
 ARG JAR_FILE
 

@@ -19,7 +19,7 @@ services:
       PROFILE: "local"
       CONFIG_SERVER_GIT_URI: "/gitrepo"
     volumes:
-      - ${HOME}/git/PPORT/lsb2/lsb2-config-data:/gitrepo
+      - ${HOME}/git/lsb2/lsb2-config-data:/gitrepo
     networks:
       - learn-ms-network
 

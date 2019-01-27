@@ -13,7 +13,7 @@ plugins {
 	id 'idea'
 	id 'java-gradle-plugin'
 	id 'com.avast.gradle.docker-compose' version '0.8.4'
-  id 'com.google.cloud.tools.jib' version '0.9.8'
+  id 'com.google.cloud.tools.jib' version '1.0.0'
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -67,14 +67,17 @@ composeUp.dependsOn composeBuild
 
 jib {
   from {
-    image = 'docker.obc.ov.otto.de/base/openjdk:8-jre-alpine'
+    image = 'openjdk:8-jre-alpine'
   }
   to {
-    image = "docker.obc.ov.otto.de/jib/lsb2-config-server:local"
-//    credHelper = 'osxkeychain'
+    image = 'jghamburg/lsb2-config-server:local'
+    auth{
+      username = dockerRegistryUsername
+      password = dockerRegistryPassword
+    }
   }
   container {
-    jvmFlags = ['-Djava.security.egd=file:/dev/./urandom', '-Xms512m', '-Xdebug', "-Dspring.profiles.active=${activeSpringProfiles}"]
+    jvmFlags = ['-Djava.security.egd=file:/dev/./urandom', '-Xms512m', '-Xdebug', "-Dspring.profiles.active=${activeSpringProfiles}".toString()]
     mainClass = 'com.greglturnquist.learningspringboot.LearningSpringBootConfigServer'
     args = []
     ports = ['8888']
