@@ -39,14 +39,13 @@ public class LearningSpringBootConfigServer {
 			LearningSpringBootConfigServer.class, args);
 	}
 
-	@Bean
-	UserDetailsService userDetailsService() {
-		return new InMemoryUserDetailsManager(
-			User.withDefaultPasswordEncoder()
-			.username("user")
-			.password("password")
-			.roles("USER").build());
-	}
+  @Bean
+  UserDetailsService userDetailsService() {
+    return new InMemoryUserDetailsManager(
+        User.withUsername("user")
+            .password("{noop}password")
+            .roles("USER").build());
+  }
 
   @Configuration
   protected static class SecurityPolicy extends WebSecurityConfigurerAdapter {
