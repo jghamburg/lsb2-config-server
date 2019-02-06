@@ -1,22 +1,37 @@
-buildscript {
-  ext {
-		springCloudVersion = 'Greenwich.RELEASE'
-    activeSpringProfiles = 'local'
-	}
-}
-
 plugins {
-	id 'org.springframework.boot' version '2.1.2.RELEASE' apply true
-	// tag::gradle-git[]
-	id 'com.gorylenko.gradle-git-properties' version '2.0.0'
-	// end::gradle-git[]
-	id 'idea'
-	id 'java-gradle-plugin'
-	id 'com.avast.gradle.docker-compose' version '0.8.13'
+  id 'org.springframework.boot' version '2.1.2.RELEASE' apply true
+  id 'java'
+  id 'idea'
+  id 'com.gorylenko.gradle-git-properties' version '2.0.0'
+  id 'com.avast.gradle.docker-compose' version '0.8.13'
   id 'com.google.cloud.tools.jib' version '1.0.0'
 }
 
 apply plugin: 'io.spring.dependency-management'
+
+ext {
+  set('springCloudVersion', 'Greenwich.RELEASE')
+  set('activeSpringProfiles', 'local')
+}
+
+group = 'com.gregturnquist.learningspringboot'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+  mavenCentral()
+  maven { url 'https://repo.spring.io/milestone' }
+}
+
+dependencies {
+  implementation 'org.springframework.boot:spring-boot-starter-security'
+  implementation 'org.springframework.cloud:spring-cloud-config-server'
+}
+
+dependencyManagement {
+  imports {
+    mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+  }
+}
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -86,20 +101,3 @@ jib {
     format = 'OCI'
   }
 }
-
-configurations {
-	all*.exclude group: 'ch.qos.logback', module: 'logback-classic'
-}
-// tag::code[]
-dependencies {
-  implementation 'org.springframework.boot:spring-boot-starter-security'
-  implementation 'org.springframework.cloud:spring-cloud-config-server'
-}
-
-dependencyManagement {
-	imports {
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-	}
-}
-
-// end::code[]
