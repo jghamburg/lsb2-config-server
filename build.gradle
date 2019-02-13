@@ -1,13 +1,12 @@
 plugins {
   id 'org.springframework.boot' version '2.1.2.RELEASE' apply true
+  id "io.spring.dependency-management" version "1.0.6.RELEASE"
   id 'java'
   id 'idea'
   id 'com.gorylenko.gradle-git-properties' version '2.0.0'
   id 'com.avast.gradle.docker-compose' version '0.8.13'
   id 'com.google.cloud.tools.jib' version '1.0.0'
 }
-
-apply plugin: 'io.spring.dependency-management'
 
 ext {
   set('springCloudVersion', 'Greenwich.RELEASE')
@@ -36,13 +35,19 @@ dependencyManagement {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-repositories {
-	jcenter()
+lombok {
+  version = '1.18.4'
+  sha256 = ""
 }
 
-jar {
-	baseName = 'learning-spring-boot-config-server'
-	version = '0.0.1-SNAPSHOT'
+repositories {
+  jcenter()
+}
+
+bootJar {
+  baseName = 'lsb2-config-server'
+  version = ''
+  excludeDevtools = false
 }
 /*
  * docker-compose plugin configuration.

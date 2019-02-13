@@ -33,11 +33,9 @@ tasks
 cleanIdea
 idea
 openIdea
-pluginDescriptors
-pluginUnderTestMetadata
-validateTaskProperties
 check
 test
+_jibSkaffoldFiles
 cleanIdeaModule
 cleanIdeaProject
 cleanIdeaWorkspace
@@ -46,6 +44,9 @@ compileTestJava
 ideaModule
 ideaProject
 ideaWorkspace
+jib
+jibBuildTar
+jibDockerBuild
 processResources
 processTestResources
 Pattern:
@@ -86,11 +87,9 @@ tasks
 cleanIdea
 idea
 openIdea
-pluginDescriptors
-pluginUnderTestMetadata
-validateTaskProperties
 check
 test
+_jibSkaffoldFiles
 cleanIdeaModule
 cleanIdeaProject
 cleanIdeaWorkspace
@@ -99,5 +98,8 @@ compileTestJava
 ideaModule
 ideaProject
 ideaWorkspace
+jib
+jibBuildTar
+jibDockerBuild
 processResources
 processTestResources
