@@ -35,11 +35,6 @@ dependencyManagement {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-lombok {
-  version = '1.18.4'
-  sha256 = ""
-}
-
 repositories {
   jcenter()
 }
