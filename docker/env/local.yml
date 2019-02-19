@@ -7,7 +7,7 @@ services:
     labels:
       lsb2.template.description: "Configuration Server for local environment"
       lsb2.version: "local"
-    image: "config-server:local"
+    image: "jghamburg/lsb2-config-server:local"
     build:
       context: ../..
       dockerfile: ./docker/Dockerfile
