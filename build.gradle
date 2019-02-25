@@ -22,14 +22,11 @@ repositories {
 }
 
 dependencies {
+    // implementation platform('org.springframework.cloud:spring-cloud-dependencies:Greenwich.RELEASE')
+  // enforce versions defined in bom
+  implementation enforcedPlatform('org.springframework.cloud:spring-cloud-dependencies:Greenwich.RELEASE')
   implementation 'org.springframework.boot:spring-boot-starter-security'
   implementation 'org.springframework.cloud:spring-cloud-config-server'
-}
-
-dependencyManagement {
-  imports {
-    mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-  }
 }
 
 sourceCompatibility = 1.8
