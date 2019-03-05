@@ -27,9 +27,9 @@ spring:
 #          clone-on-start: false
           uri: https://github.com/jghamburg/lsb2-config-data.git
           clone-on-start: true
-          force-pull: true
-          deleteUntrackedBranches: true
-          skipSslValidation: true
+          skip-ssl-validation: true
+#          force-pull: true
+#          deleteUntrackedBranches: true
 #          timeout: 5 # secs
 # tag::secured[]
 security:

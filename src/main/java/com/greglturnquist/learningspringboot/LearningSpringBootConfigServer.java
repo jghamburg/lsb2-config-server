@@ -35,8 +35,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 public class LearningSpringBootConfigServer {
 
 	public static void main(String[] args) {
-		SpringApplication.run(
-			LearningSpringBootConfigServer.class, args);
+		SpringApplication.run(LearningSpringBootConfigServer.class, args);
 	}
 
   @Bean
