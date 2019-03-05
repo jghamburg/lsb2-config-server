@@ -23,10 +23,13 @@ spring:
     config:
       server:
         git:
-          uri: ${CONFIG_SERVER_GIT_URI:${HOME}/git/lsb2/lsb2-config-data}
-          clone-on-start: false
-#          uri: https://github.com/jghamburg/lsb2-config-data.git
-#          skipSslValidation: true
+#          uri: ${CONFIG_SERVER_GIT_URI:${HOME}/git/lsb2/lsb2-config-data}
+#          clone-on-start: false
+          uri: https://github.com/jghamburg/lsb2-config-data.git
+          clone-on-start: true
+          force-pull: true
+          deleteUntrackedBranches: true
+          skipSslValidation: true
 #          timeout: 5 # secs
 # tag::secured[]
 security:
