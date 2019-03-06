@@ -1,5 +1,5 @@
 server:
-  port: 8888
+  port: 8080
 #
 # details on endpoints: https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html#production-ready-endpoints-exposing-endpoints
 management:

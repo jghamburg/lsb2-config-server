@@ -7,6 +7,10 @@ plugins {
   id 'com.avast.gradle.docker-compose' version '0.9.1'
   id 'com.google.cloud.tools.jib' version '1.0.1'
   id "com.github.ben-manes.versions" version "0.21.0"
+  id 'org.unbroken-dome.helm-commands' version '0.3.0'
+  id 'org.unbroken-dome.helm' version '0.3.0'
+  id 'org.unbroken-dome.helm-publish' version '0.3.0'
+  id 'org.unbroken-dome.helm-releases' version '0.3.0'
 }
 
 ext {
@@ -18,9 +22,7 @@ group = 'com.gregturnquist.learningspringboot'
 version = '0.0.1-SNAPSHOT'
 
 repositories {
-    mavenCentral()
-    maven { url "https://dl.bintray.com/micronaut/core-releases-local" }
-    jcenter()
+  mavenCentral()
   maven { url 'https://repo.spring.io/milestone' }
 }
 
@@ -30,13 +32,75 @@ dependencies {
   implementation 'org.springframework.cloud:spring-cloud-config-server'
 }
 
-sourceCompatibility = 11
-targetCompatibility = 11
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 bootJar {
   baseName = 'lsb2-config-server'
   version = ''
   excludeDevtools = false
+}
+
+helm {
+  home = file("${project.buildDir}/helm/home")
+  // outputDir = file("${project.buildDir}/helm")
+//  tiller {
+//    install = true
+//    // Install/expect Tiller in a different namespace than kube-system
+//    namespace = 'kube-system'
+//    forceUpgrade = true
+//    // Set a service account for Tiller
+//    serviceAccount = 'tiller-service-account'
+//  }
+// The global lint configuration applies to all charts
+  lint {
+      // treat linter warnings as errors (failing the build)
+      strict = true
+      enabled = false
+  }
+  filtering {
+    // This value will be resolvable in all charts' YAML files as ${authorName}
+    values.put 'authorName', 'Developer'
+  }
+
+  charts {
+    foo {
+        chartName = project.name
+        chartVersion = project.version.toString()
+        sourceDir = file('src/main/helm')
+    }
+  }
+
+  releases {
+      foo {
+          from charts.foo
+      }
+  }
+
+
+  repositories {
+      museum {
+          url = uri('http://chartmuseum.local.svc.cluster.local/')
+      }
+  }
+  publishing {
+      repositories {
+          museum {
+              url = uri('http://chartmuseum.local.svc.cluster.local/')
+          }
+      }
+  }  
+}
+
+task displayConfigs {
+  doLast{
+    def helmMains = configurations.find{it.name.startsWith("helmMain")}
+    helmMains.each{
+      println "${it.name}  ====================="
+      it.properties.each {prop -> println "prop ${prop}"}
+      println it.artifacts
+    }
+  }    
 }
 /*
  * docker-compose plugin configuration.
