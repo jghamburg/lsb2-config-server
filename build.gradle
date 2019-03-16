@@ -7,7 +7,6 @@ plugins {
   id 'com.avast.gradle.docker-compose' version '0.9.1'
   id 'com.google.cloud.tools.jib' version '1.0.1'
   id "com.github.ben-manes.versions" version "0.21.0"
-  id 'org.unbroken-dome.helm-commands' version '0.3.0'
   id 'org.unbroken-dome.helm' version '0.3.0'
   id 'org.unbroken-dome.helm-publish' version '0.3.0'
   id 'org.unbroken-dome.helm-releases' version '0.3.0'
@@ -22,6 +21,7 @@ group = 'com.gregturnquist.learningspringboot'
 version = '0.0.1-SNAPSHOT'
 
 repositories {
+  mavenLocal()
   mavenCentral()
   maven { url 'https://repo.spring.io/milestone' }
 }
@@ -42,6 +42,7 @@ bootJar {
 }
 
 helm {
+  // basic helm plugin config
   home = file("${project.buildDir}/helm/home")
   // outputDir = file("${project.buildDir}/helm")
 //  tiller {
@@ -55,34 +56,41 @@ helm {
 // The global lint configuration applies to all charts
   lint {
       // treat linter warnings as errors (failing the build)
-      strict = true
-      enabled = false
+      strict = false
+      enabled = true
   }
   filtering {
     // This value will be resolvable in all charts' YAML files as ${authorName}
     values.put 'authorName', 'Developer'
   }
-
-  charts {
-    foo {
-        chartName = project.name
-        chartVersion = project.version.toString()
-        sourceDir = file('src/main/helm')
-    }
-  }
-
-  releases {
-      foo {
-          from charts.foo
-      }
-  }
-
-
+// if the following section is commented out the implicit charts.main is injected
+//  charts {
+//    foo {
+//        chartName = project.name
+//        chartVersion = project.version.toString()
+//        sourceDir = file('src/main/helm')
+//    }
+//  }
   repositories {
       museum {
           url = uri('http://chartmuseum.local.svc.cluster.local/')
       }
   }
+  // helm-release plugin config
+  releases {
+      'lsb2-config-server' {
+          from charts.main
+          namespace = 'local'
+          replace = true
+          // pass values (like --set on the command line)
+          values = [ 'rootUser.password': 'secret' ]
+          // pass value files (like -f on the command line)
+          valueFiles.from "src/main/helm/values.yaml"
+          valueFiles.from "src/main/helm/values-${activeSpringProfiles}.yaml"
+      }
+  }
+
+  // helm-publish plugin config
   publishing {
       repositories {
           museum {
@@ -92,16 +100,6 @@ helm {
   }  
 }
 
-task displayConfigs {
-  doLast{
-    def helmMains = configurations.find{it.name.startsWith("helmMain")}
-    helmMains.each{
-      println "${it.name}  ====================="
-      it.properties.each {prop -> println "prop ${prop}"}
-      println it.artifacts
-    }
-  }    
-}
 /*
  * docker-compose plugin configuration.
  * Details on https://github.com/avast/gradle-docker-compose-plugin

@@ -1,0 +1,12 @@
+image:
+  repository: jghamburg/lsb2-config-server
+  tag: local
+  pullPolicy: IfNotPresent
+
+fullnameOverride: "lsb2-config-server"
+
+service:
+  name: lsb2-config-service
+  description: The netflix config service
+  type: ClusterIP
+  port: 80
