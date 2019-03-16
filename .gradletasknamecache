@@ -53,7 +53,6 @@ cleanIdeaProject
 cleanIdeaWorkspace
 compileJava
 compileTestJava
-displayConfigs
 ideaModule
 ideaProject
 ideaWorkspace
@@ -129,7 +128,6 @@ cleanIdeaProject
 cleanIdeaWorkspace
 compileJava
 compileTestJava
-displayConfigs
 ideaModule
 ideaProject
 ideaWorkspace
