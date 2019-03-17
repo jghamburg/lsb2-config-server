@@ -1,6 +1,13 @@
 # Default values for lsb2-config-server.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
+app:
+  profile: local
+  port: 8080
+  configserver:
+    uri: https://github.com/jghamburg/lsb2-config-data.git
+    cloneOn-Start: true
+    skipSslValidation: true
 
 replicaCount: 1
 

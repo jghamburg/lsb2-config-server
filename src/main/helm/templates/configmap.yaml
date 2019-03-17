@@ -1,0 +1,17 @@
+# This is a simple example of using a config map to create a single page static site.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.service.name  }}-config
+  labels:
+    app: {{ .Values.service.name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  # When the config map is mounted as a volume, these will be created as files.
+  PORT: {{ .Values.service.internalPort | quote }}
+  PROFILE: {{ .Values.app.profile }} 
+  CONFIG_SERVER_URI: {{  .Values.app.configserver.uri }}
+  CONFIG_SERVER_CLONE_ON_START: {{ .Values.app.configserver.cloneOnStart | quote }}
+  CONFIG_SERVER_SKIP_SSL_VALIDATION: {{ .Values.app.configserver.skipSslValidation | quote }}

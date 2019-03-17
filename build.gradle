@@ -81,7 +81,10 @@ helm {
       'lsb2-config-server' {
           from charts.main
           namespace = 'local'
-          replace = true
+          replace = false
+          purge = true
+          dryRun = false
+          wait = false
           // pass values (like --set on the command line)
           values = [ 'rootUser.password': 'secret' ]
           // pass value files (like -f on the command line)

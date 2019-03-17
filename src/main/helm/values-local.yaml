@@ -1,3 +1,11 @@
+app:
+  profile: local
+  port: 8080
+  configserver:
+    uri: https://github.com/jghamburg/lsb2-config-data.git
+    cloneOn-Start: true
+    skipSslValidation: true
+
 image:
   repository: jghamburg/lsb2-config-server
   tag: local
@@ -10,3 +18,4 @@ service:
   description: The netflix config service
   type: ClusterIP
   port: 80
+  targetPort: 8080
