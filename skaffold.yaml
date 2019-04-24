@@ -1,0 +1,21 @@
+apiVersion: skaffold/v1beta8
+kind: Config
+build:
+  local:
+    push: false
+  artifacts:
+  - image: jghamburg/lsb2-config-server
+    context: .
+    jibGradle: {}
+deploy:
+  helm:
+    releases:
+      - name: lsb2-config-server
+        chartPath: src/main/helm
+        valuesFiles: []
+        values:
+          image.repository: jghamburg/lsb2-config-server
+        setValues:
+          image.tag: ""
+        wait: true
+        recreatePods: true

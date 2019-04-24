@@ -5,16 +5,17 @@ plugins {
   id 'idea'
   id 'com.gorylenko.gradle-git-properties' version '2.0.0'
   id 'com.avast.gradle.docker-compose' version '0.9.1'
-  id 'com.google.cloud.tools.jib' version '1.0.1'
+  id 'com.google.cloud.tools.jib' version '1.1.2'
   id "com.github.ben-manes.versions" version "0.21.0"
-  id 'org.unbroken-dome.helm' version '0.3.0'
-  id 'org.unbroken-dome.helm-publish' version '0.3.0'
-  id 'org.unbroken-dome.helm-releases' version '0.3.0'
+  id 'org.unbroken-dome.helm' version '0.3.1'
+  id 'org.unbroken-dome.helm-publish' version '0.3.1'
+  id 'org.unbroken-dome.helm-releases' version '0.3.1'
 }
 
 ext {
   set('springCloudVersion', 'Greenwich.RELEASE')
   set('activeSpringProfiles', 'local')
+  set('chartRepoUrl', 'http://chartmuseum.local.svc.cluster.local/')
 }
 
 group = 'com.gregturnquist.learningspringboot'
@@ -32,8 +33,8 @@ dependencies {
   implementation 'org.springframework.cloud:spring-cloud-config-server'
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 11
+targetCompatibility = 11
 
 bootJar {
   baseName = 'lsb2-config-server'
@@ -73,7 +74,8 @@ helm {
 //  }
   repositories {
       museum {
-          url = uri('http://chartmuseum.local.svc.cluster.local/')
+//          url = uri('http://chartmuseum.local.svc.cluster.local/')
+          url = uri(chartRepoUrl)
       }
   }
   // helm-release plugin config
@@ -97,7 +99,7 @@ helm {
   publishing {
       repositories {
           museum {
-              url = uri('http://chartmuseum.local.svc.cluster.local/')
+              url = uri(chartRepoUrl)
           }
       }
   }  
@@ -159,5 +161,6 @@ jib {
     args = []
     ports = ['8888']
     format = 'OCI'
+    useCurrentTimestamp = true
   }
 }
