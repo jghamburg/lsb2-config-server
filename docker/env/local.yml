@@ -3,7 +3,7 @@ version: '3.1'
 
 services:
   # service name has to be environment-unique, else one startup will shutdown others
-  local-config-server:
+  lsb2-config-server:
     labels:
       lsb2.template.description: "Configuration Server for local environment"
       lsb2.version: "local"
@@ -16,7 +16,8 @@ services:
     ports:
       - "8888:8080" # web port
     environment:
-      PROFILE: "local"
+      PROFILE: "default"
+      PORT: 8080
       CONFIG_SERVER_GIT_URI: "/gitrepo"
     volumes:
       - ${HOME}/git/lsb2/lsb2-config-data:/gitrepo
