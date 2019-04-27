@@ -10,8 +10,8 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   # When the config map is mounted as a volume, these will be created as files.
-  PORT: {{ .Values.service.internalPort | quote }}
+  PORT: {{ .Values.app.port | quote }}
   PROFILE: {{ .Values.app.profile }} 
-  CONFIG_SERVER_URI: {{  .Values.app.configserver.uri }}
+  CONFIG_SERVER_GIT_URI: {{  .Values.app.configserver.uri }}
   CONFIG_SERVER_CLONE_ON_START: {{ .Values.app.configserver.cloneOnStart | quote }}
   CONFIG_SERVER_SKIP_SSL_VALIDATION: {{ .Values.app.configserver.skipSslValidation | quote }}

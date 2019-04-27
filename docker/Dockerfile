@@ -1,4 +1,4 @@
-FROM azul/zulu-openjdk-alpine:11.0.2 as packager
+FROM azul/zulu-openjdk-alpine:11.0.3 as packager
 
 # First stage: JDK 11 with modules required for Spring Boot
 RUN /usr/lib/jvm/zulu-11/bin/jlink \
@@ -16,8 +16,8 @@ ENV PATH="$PATH:$JAVA_HOME/bin"
 FROM alpine:3.8
 RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk/* && \
   update-ca-certificates
-# COPY --from=packager /usr/lib/jvm/zulu-11-minimal /opt/jdk-11-minimal
 COPY --from=packager /usr/lib/jvm/zulu-11 /opt/jdk-11-minimal
+# COPY --from=packager /usr/lib/jvm/zulu-11-minimal /opt/jdk-11-minimal
 # create user with defined user-id and set rights to volume for user
 ENV JAVA_HOME=/opt/jdk-11-minimal
 ENV PATH="$PATH:$JAVA_HOME/bin"
@@ -32,7 +32,7 @@ RUN adduser -D -u 1000 app && echo "app:ppa" | chpasswd && \
 
 WORKDIR /app
 # run rest of container with user app
-# USER app
+USER app
 COPY build/libs/*.jar /app/app.jar
 
 ENTRYPOINT /app/run.sh $PROFILE $JAVA_HEAP

@@ -44,6 +44,9 @@ tasks
 cleanIdea
 idea
 openIdea
+jib
+jibBuildTar
+jibDockerBuild
 check
 test
 _jibSkaffoldFiles
@@ -56,9 +59,7 @@ compileTestJava
 ideaModule
 ideaProject
 ideaWorkspace
-jib
-jibBuildTar
-jibDockerBuild
+prepareKotlinBuildScriptModel
 processResources
 processTestResources
 Pattern:
@@ -119,6 +120,9 @@ tasks
 cleanIdea
 idea
 openIdea
+jib
+jibBuildTar
+jibDockerBuild
 check
 test
 _jibSkaffoldFiles
@@ -131,8 +135,6 @@ compileTestJava
 ideaModule
 ideaProject
 ideaWorkspace
-jib
-jibBuildTar
-jibDockerBuild
+prepareKotlinBuildScriptModel
 processResources
 processTestResources
