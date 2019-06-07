@@ -5,8 +5,8 @@ spring:
     config:
       server:
         git:
-          uri: ${CONFIG_SERVER_GIT_URI:https://github.com/jghamburg/lsb2-config-data.git}
-          clone-on-start: ${CONFIG_SERVER_CLONE_ON_START:true}
+#          uri: ${CONFIG_SERVER_GIT_URI:https://github.com/jghamburg/lsb2-config-data.git}
+#          clone-on-start: ${CONFIG_SERVER_CLONE_ON_START:true}
           skip-ssl-validation: ${CONFIG_SERVER_SKIP_SSL_VALIDATION:true}
 #          force-pull: true
 #          deleteUntrackedBranches: true

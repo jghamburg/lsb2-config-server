@@ -34,5 +34,7 @@ WORKDIR /app
 # run rest of container with user app
 USER app
 COPY build/libs/*.jar /app/app.jar
+RUN mkdir /gitrepo
+VOLUME /gitrepo
 
 ENTRYPOINT /app/run.sh $PROFILE $JAVA_HEAP
