@@ -6,8 +6,8 @@ services:
   lsb2-config-server:
     labels:
       lsb2.template.description: "Configuration Server for local environment"
-      lsb2.version: "local"
-    image: "jghamburg/lsb2-config-server:local"
+      lsb2.version: "$TAG"
+    image: "jghamburg/lsb2-config-server:$TAG"
     build:
       context: ../..
       dockerfile: ./docker/Dockerfile
@@ -21,9 +21,3 @@ services:
       CONFIG_SERVER_GIT_URI: "/gitrepo"
     volumes:
       - ${HOME}/git/lsb2/lsb2-config-data:/gitrepo
-    networks:
-      - learn-ms-network
-
-networks:
-  learn-ms-network:
-    external: true
