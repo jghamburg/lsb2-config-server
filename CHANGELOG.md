@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/jghamburg/lsb2-config-server/compare/v1.0.0...v1.0.1) (2019-09-02)
+
+
+### Bug Fixes
+
+* **build:** support semantic release without ci ([0b9864b](https://github.com/jghamburg/lsb2-config-server/commit/0b9864b))
+
 # 1.0.0 (2019-09-02)
 
 
