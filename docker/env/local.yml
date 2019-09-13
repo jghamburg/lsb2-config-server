@@ -16,7 +16,7 @@ services:
     ports:
       - "8888:8080" # web port
     environment:
-      PROFILE: "default"
+      PROFILE: 'compose'
       PORT: 8080
       CONFIG_SERVER_GIT_URI: "/gitrepo"
     volumes:
