@@ -1,4 +1,4 @@
-FROM azul/zulu-openjdk-alpine:11.0.3 as packager
+FROM azul/zulu-openjdk-alpine:11.0.5 as packager
 
 # First stage: JDK 11 with modules required for Spring Boot
 RUN /usr/lib/jvm/zulu-11/bin/jlink \
@@ -13,7 +13,7 @@ ENV JAVA_HOME=/usr/lib/jvm/zulu-11
 ENV PATH="$PATH:$JAVA_HOME/bin"
 
 # Second stage, add only our custom jdk11 distro and our app
-FROM alpine:3.8
+FROM alpine:3.10
 RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk/* && \
   update-ca-certificates
 COPY --from=packager /usr/lib/jvm/zulu-11 /opt/jdk-11-minimal
