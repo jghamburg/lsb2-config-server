@@ -1,9 +1,12 @@
 plugins {
-  id 'org.springframework.boot' version '2.1.10.RELEASE' apply true
+  id 'org.springframework.boot' version '2.2.1.RELEASE' apply true
   id "io.spring.dependency-management" version "1.0.8.RELEASE"
   id 'java'
   id 'idea'
   id 'com.gorylenko.gradle-git-properties' version '2.1.0'
+  id 'com.palantir.docker' version '0.22.1'
+  id 'com.palantir.docker-run' version '0.22.1'
+
   id 'com.avast.gradle.docker-compose' version '0.9.4'
   id 'com.google.cloud.tools.jib' version '1.5.1'
   id 'org.unbroken-dome.helm' version '0.4.0'
@@ -31,7 +34,7 @@ repositories {
 }
 
 dependencies {
-  implementation enforcedPlatform('org.springframework.cloud:spring-cloud-dependencies:Greenwich.SR4')
+  implementation platform('org.springframework.cloud:spring-cloud-dependencies:Hoxton.RELEASE')
   implementation 'org.springframework.boot:spring-boot-starter-security'
   implementation 'org.springframework.cloud:spring-cloud-config-server'
 }
@@ -143,12 +146,13 @@ jib {
   }
 }
 
-task semanticRelease (type: Exec){
-  workingDir '.'
-  commandLine 'semantic-release', '-b', 'master', '--no-ci'
-}
-
-task verifySemanticRelease (type: Exec){
-  workingDir '.'
-  commandLine 'semantic-release', '-b', 'master'
+dockerRun{
+    name 'semantic-release'
+    image 'jghamburg/git-semantic-release'
+    volumes "${projectDir}": '/app'
+    ports '7080:5000'
+    daemonize false
+    clean true
+    command 'semantic-release', '-b', 'master'
+    env 'GH_TOKEN': "${System.env.GH_TOKEN}", 'GIT_CREDENTIALS': "${System.env.GIT_CREDENTIALS}"
 }
