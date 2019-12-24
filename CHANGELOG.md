@@ -1,3 +1,11 @@
+## [1.0.2](https://github.com/jghamburg/lsb2-config-server/compare/v1.0.1...v1.0.2) (2019-12-24)
+
+
+### Bug Fixes
+
+* **docker-compose:** fix local startup ([e001e1c](https://github.com/jghamburg/lsb2-config-server/commit/e001e1cb64dcccb688cd6d59af9d4a077f4df255))
+* **runtime:** fix local startup config ([e7a3650](https://github.com/jghamburg/lsb2-config-server/commit/e7a3650772b8a56463c99f5600ed048f0901659f))
+
 ## [1.0.1](https://github.com/jghamburg/lsb2-config-server/compare/v1.0.0...v1.0.1) (2019-09-02)
 
 

@@ -153,6 +153,6 @@ dockerRun{
     ports '7080:5000'
     daemonize false
     clean true
-    command 'semantic-release', '-b', 'master'
+    command 'semantic-release', '-b', 'master', '--no-ci'
     env 'GH_TOKEN': "${System.env.GH_TOKEN}", 'GIT_CREDENTIALS': "${System.env.GIT_CREDENTIALS}"
 }
