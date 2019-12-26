@@ -16,7 +16,9 @@
 package com.greglturnquist.learningspringboot;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.cloud.config.server.EnableConfigServer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.User;
@@ -29,7 +31,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 /**
  * @author Greg Turnquist
  */
-// tag::code[]
 @SpringBootApplication
 @EnableConfigServer
 public class LearningSpringBootConfigServer {
@@ -47,7 +48,7 @@ public class LearningSpringBootConfigServer {
   }
 
   @Configuration
-  protected static class SecurityPolicy extends WebSecurityConfigurerAdapter {
+  class SecurityPolicy extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -63,4 +64,3 @@ public class LearningSpringBootConfigServer {
   }
 
 }
-// end::code[]
