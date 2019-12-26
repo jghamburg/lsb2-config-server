@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/jghamburg/lsb2-config-server/compare/v1.0.2...v1.1.0) (2019-12-26)
+
+
+### Features
+
+* **spring:** upgrade spring cloud ([741c9f7](https://github.com/jghamburg/lsb2-config-server/commit/741c9f7e7843230073375ca04ab836e1ba07f6d2))
+
 ## [1.0.2](https://github.com/jghamburg/lsb2-config-server/compare/v1.0.1...v1.0.2) (2019-12-24)
 
 
