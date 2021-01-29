@@ -1,20 +1,20 @@
 plugins {
-  id 'org.springframework.boot' version '2.2.2.RELEASE' apply true
-  id "io.spring.dependency-management" version "1.0.8.RELEASE"
+  id 'org.springframework.boot' version '2.4.2' apply true
+  id "io.spring.dependency-management" version "1.0.11.RELEASE"
   id 'java'
   id 'idea'
-  id 'com.gorylenko.gradle-git-properties' version '2.1.0'
-  id 'com.palantir.docker' version '0.22.1'
-  id 'com.palantir.docker-run' version '0.22.1'
+  id 'com.gorylenko.gradle-git-properties' version '2.2.4'
+  id 'com.palantir.docker' version '0.25.0'
+  id 'com.palantir.docker-run' version '0.25.0'
 
-  id 'com.avast.gradle.docker-compose' version '0.9.4'
-  id 'com.google.cloud.tools.jib' version '1.5.1'
-  id 'org.unbroken-dome.helm' version '0.4.0'
-  id 'org.unbroken-dome.helm-publish' version '0.4.0'
-  id 'org.unbroken-dome.helm-releases' version '0.4.0'
+  id 'com.avast.gradle.docker-compose' version '0.14.0'
+  id 'com.google.cloud.tools.jib' version '2.7.1'
+  id 'org.unbroken-dome.helm' version '1.4.0'
+  id 'org.unbroken-dome.helm-publish' version '1.4.0'
+  id 'org.unbroken-dome.helm-releases' version '1.4.0'
 
-  id 'se.patrikerdes.use-latest-versions' version '0.2.12'
-  id 'com.github.ben-manes.versions' version '0.24.0'
+  id 'se.patrikerdes.use-latest-versions' version '0.2.15'
+  id 'com.github.ben-manes.versions' version '0.36.0'
 
   id 'maven-publish'
 }
@@ -34,7 +34,7 @@ repositories {
 }
 
 dependencies {
-  implementation enforcedPlatform('org.springframework.cloud:spring-cloud-dependencies:Hoxton.SR1')
+  implementation enforcedPlatform('org.springframework.cloud:spring-cloud-dependencies:2020.0.1')
   implementation 'org.springframework.boot:spring-boot-starter-web'
   implementation 'org.springframework.boot:spring-boot-starter-security'
   implementation 'org.springframework.cloud:spring-cloud-config-server'
@@ -43,8 +43,20 @@ dependencies {
 sourceCompatibility = 11
 targetCompatibility = 11
 
+springBoot {
+    buildInfo {
+        properties {
+            artifact = "${rootProject.name}"
+            group = "${project.group}"
+            name = "${rootProject.name}"
+            version = "${project.version}"
+        }
+    }
+}
+
 bootJar {
   baseName = 'lsb2-config-server'
+  layered()
   excludeDevtools = false
 }
 
@@ -57,52 +69,81 @@ publishing {
     }
 }
 
-helm {
-  // basic helm plugin config
-  home = file("${project.buildDir}/helm/home")
-  outputDir = file("${project.buildDir}/helm")
-// The global lint configuration applies to all charts
-  lint {
-      // treat linter warnings as errors (failing the build)
-      strict = false
-      enabled = true
-  }
-  filtering {
-    // This value will be resolvable in all charts' YAML files as ${authorName}
-    values.put 'authorName', 'Developer'
-    values.put 'image.tag', project.version.toString()
-  }
-  repositories {
-      museum {
-          url = uri(chartRepoUrl)
-      }
-  }
-  // helm-release plugin config
-  releases {
-      'lsb2-config-server' {
-          from charts.main
-          namespace = 'local'
-          replace = false
-          purge = true
-          dryRun = false
-          wait = false
-          // pass values (like --set on the command line)
-          values = [ 'image.tag': project.version ]
-          // pass value files (like -f on the command line)
-          valueFiles.from "src/main/helm/values.yaml"
-          valueFiles.from "src/main/helm/values-${activeSpringProfiles}.yaml"
-      }
-  }
-  // helm-publish plugin config
-  publishing {
-      repositories {
-          museum {
-              url = uri(chartRepoUrl)
-          }
-      }
-  }
+tasks.jib.dependsOn tasks.check
+jib {
+    from {
+        image = 'gcr.io/distroless/java-debian10'
+    }
+    to {
+      image = 'jghamburg/lsb2-config-server'
+      tags = ["latest", project.version]
+      credHelper = 'osxkeychain'
+    }
+    extraDirectories {
+        paths = file('./ssl')
+    }
+    container {
+      jvmFlags = ['-Djava.security.egd=file:/dev/./urandom', '-Xms256m', '-Xdebug']
+      mainClass = 'com.greglturnquist.learningspringboot.LearningSpringBootConfigServer'
+      args = []
+      ports = ['8888']
+    }
 }
+helm {
+    // The global lint configuration applies to all charts
+    lint {
+        // treat linter warnings as errors (failing the build)
+        strict = true
+    }
 
+    publishing {
+        repositories {
+            chartMuseum('localcharts') {
+                url = uri('http://chartmuseum-chartmuseum.default.svc.cluster.local:8080')
+            }
+        }
+    }
+
+    filtering {
+        values.put 'imageRepository', jib.to.image
+        values.put 'imageTag', jib.to.tags.first()
+        values.put 'appVersion', "${project.version}"
+    }
+
+    charts {
+        main {
+          chartVersion = "${project.version}"
+          sourceDir = file('src/main/helm')
+        }
+    }
+
+    releases {
+
+        configserver {
+            valuesDir 'src/main/helm'
+            forTarget('local') {
+                from chart('main')
+                installDependsOn 'jibDockerBuild'
+                values.put 'imageTag', 'latest'
+                values.put 'appVersion', "${project.version}"
+            }
+            forTarget('nonlive') {
+                from chart('main')
+                installDependsOn 'jib'
+            }
+        }
+    }
+    releaseTargets {
+        local {
+//            kubeContext = 'docker-for-desktop'
+        }
+        nonlive {
+//            kubeContext = 'aws'
+//            atomic = true
+        }
+    }
+
+}
 /*
  * docker-compose plugin configuration.
  * Details on https://github.com/avast/gradle-docker-compose-plugin
@@ -123,29 +164,6 @@ dockerCompose {
 composeBuild.dependsOn bootJar
 composeUp.dependsOn composeBuild
 composePush.dependsOn composeBuild
-
-jib {
-  from {
-    image = 'azul/zulu-openjdk-alpine:11.0.5'
-  }
-  to {
-    image = 'jghamburg/lsb2-config-server:local'
-    // use values from $HOME/.gradle/gradle.properties
-//    auth{
-//      username = dockerRegistryUsername
-//      password = dockerRegistryPassword
-//    }
-    credHelper = 'osxkeychain'
-  }
-  container {
-    jvmFlags = ['-Djava.security.egd=file:/dev/./urandom', '-Xms512m', '-Xdebug', "-Dspring.profiles.active=${activeSpringProfiles}".toString()]
-    mainClass = 'com.greglturnquist.learningspringboot.LearningSpringBootConfigServer'
-    args = []
-    ports = ['8888']
-    format = 'OCI'
-    useCurrentTimestamp = true
-  }
-}
 
 dockerRun{
     name 'semantic-release'

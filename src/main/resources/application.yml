@@ -18,7 +18,10 @@ management:
       enabled: true
 #
 # 
+
 spring:
+  config:
+    use-legacy-processing: true  
   cloud:
     config:
       server:

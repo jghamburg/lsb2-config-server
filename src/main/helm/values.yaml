@@ -6,14 +6,14 @@ app:
   port: 8080
   configserver:
     gituri: https://github.com/jghamburg/lsb2-config-data.git
-    cloneOn-Start: true
+    cloneOnStart: true
     skipSslValidation: true
 
 replicaCount: 1
 
 image:
-  repository: jghamburg/lsb2-config-server
-  tag: local
+  repository: ${imageRepository}
+  tag: ${imageTag}
   pullPolicy: IfNotPresent
 
 nameOverride: ""
