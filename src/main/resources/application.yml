@@ -17,8 +17,13 @@ management:
     defaults:
       enabled: true
 #
+#
+info:
+  app:
+    name: Spring Cloud Config Server
+    description: This service provides Configuration Management for other microservices
+#
 # 
-
 spring:
   config:
     use-legacy-processing: true  

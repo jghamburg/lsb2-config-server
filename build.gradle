@@ -20,8 +20,8 @@ plugins {
 }
 
 ext {
-  set('activeSpringProfiles', 'local')
-  set('tag', 'local')
+  set('activeSpringProfiles', 'k8s')
+  set('tag', 'k8s')
   set('chartRepoUrl', 'http://chartmuseum.default.svc.cluster.local/')
 }
 
@@ -34,7 +34,7 @@ repositories {
 }
 
 dependencies {
-  implementation enforcedPlatform('org.springframework.cloud:spring-cloud-dependencies:2020.0.1')
+  implementation platform('org.springframework.cloud:spring-cloud-dependencies:2020.0.1')
   implementation 'org.springframework.boot:spring-boot-starter-web'
   implementation 'org.springframework.boot:spring-boot-starter-security'
   implementation 'org.springframework.cloud:spring-cloud-config-server'
@@ -83,7 +83,7 @@ jib {
         paths = file('./ssl')
     }
     container {
-      jvmFlags = ['-Djava.security.egd=file:/dev/./urandom', '-Xms256m', '-Xdebug']
+      jvmFlags = ['-Djava.security.egd=file:/dev/./urandom', '-Xmx128m', '-Xdebug']
       mainClass = 'com.greglturnquist.learningspringboot.LearningSpringBootConfigServer'
       args = []
       ports = ['8888']
