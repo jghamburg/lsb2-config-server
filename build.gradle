@@ -9,9 +9,9 @@ plugins {
 
   id 'com.avast.gradle.docker-compose' version '0.14.0'
   id 'com.google.cloud.tools.jib' version '2.7.1'
-  id 'org.unbroken-dome.helm' version '1.4.0'
-  id 'org.unbroken-dome.helm-publish' version '1.4.0'
-  id 'org.unbroken-dome.helm-releases' version '1.4.0'
+  id 'org.unbroken-dome.helm' version '1.6.0'
+  id 'org.unbroken-dome.helm-publish' version '1.6.0'
+  id 'org.unbroken-dome.helm-releases' version '1.6.0'
 
   id 'se.patrikerdes.use-latest-versions' version '0.2.15'
   id 'com.github.ben-manes.versions' version '0.36.0'
@@ -28,9 +28,7 @@ ext {
 group = 'com.gregturnquist.learningspringboot'
 
 repositories {
-  mavenLocal()
   mavenCentral()
-  maven { url 'https://repo.spring.io/milestone' }
 }
 
 dependencies {
@@ -44,14 +42,14 @@ sourceCompatibility = 11
 targetCompatibility = 11
 
 springBoot {
-    buildInfo {
-        properties {
-            artifact = "${rootProject.name}"
-            group = "${project.group}"
-            name = "${rootProject.name}"
-            version = "${project.version}"
-        }
+  buildInfo {
+    properties {
+      artifact = "${rootProject.name}"
+      group = "${project.group}"
+      name = "${rootProject.name}"
+      version = "${project.version}"
     }
+  }
 }
 
 bootJar {
@@ -61,87 +59,82 @@ bootJar {
 }
 
 publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId 'com.gregturnquist.learningspringboot'
-            from components.java
-        }
+  publications {
+    maven(MavenPublication) {
+      groupId 'com.gregturnquist.learningspringboot'
+      from components.java
     }
+  }
 }
 
 tasks.jib.dependsOn tasks.check
 jib {
-    from {
-        image = 'gcr.io/distroless/java-debian10'
-    }
-    to {
-      image = 'jghamburg/lsb2-config-server'
-      tags = ["latest", project.version]
-      credHelper = 'osxkeychain'
-    }
-    extraDirectories {
-        paths = file('./ssl')
-    }
-    container {
-      jvmFlags = ['-Djava.security.egd=file:/dev/./urandom', '-Xmx128m', '-Xdebug']
-      mainClass = 'com.greglturnquist.learningspringboot.LearningSpringBootConfigServer'
-      args = []
-      ports = ['8888']
-    }
+  from {
+    image = 'gcr.io/distroless/java:11'
+  }
+  to {
+    image = 'jghamburg/lsb2-config-server'
+    tags = ["latest", project.version]
+    credHelper = 'osxkeychain'
+  }
+  extraDirectories {
+    paths = file('./ssl')
+  }
+  container {
+    jvmFlags = ['-Djava.security.egd=file:/dev/./urandom', '-Xmx128m', '-Xdebug']
+    mainClass = 'com.greglturnquist.learningspringboot.LearningSpringBootConfigServer'
+    args = []
+    ports = ['8888']
+  }
 }
 helm {
-    // The global lint configuration applies to all charts
-    lint {
+  // The global lint configuration applies to all charts
+  lint {
         // treat linter warnings as errors (failing the build)
         strict = true
-    }
+      }
 
-    publishing {
+  publishing {
         repositories {
-            chartMuseum('localcharts') {
-                url = uri('http://chartmuseum-chartmuseum.default.svc.cluster.local:8080')
-            }
+          chartMuseum('localcharts') {
+            url = uri('http://chartmuseum-chartmuseum.default.svc.cluster.local:8080')
+          }
         }
-    }
+      }
 
-    filtering {
+  filtering {
+        enabled = true
         values.put 'imageRepository', jib.to.image
         values.put 'imageTag', jib.to.tags.first()
         values.put 'appVersion', "${project.version}"
-    }
+      }
 
-    charts {
+  charts {
         main {
-          chartVersion = "${project.version}"
           sourceDir = file('src/main/helm')
+          chartVersion = "${project.version}"
         }
-    }
+      }
 
-    releases {
+  releases {
 
         configserver {
-            valuesDir 'src/main/helm'
-            forTarget('local') {
-                from chart('main')
-                installDependsOn 'jibDockerBuild'
-                values.put 'imageTag', 'latest'
-                values.put 'appVersion', "${project.version}"
-            }
-            forTarget('nonlive') {
-                from chart('main')
-                installDependsOn 'jib'
-            }
+          valuesDir 'src/main/helm'
+          forTarget('local') {
+            from chart('main')
+            installDependsOn 'jibDockerBuild'
+          }
+          forTarget('nonlive') {
+            from chart('main')
+            installDependsOn 'jib'
+          }
         }
-    }
-    releaseTargets {
+      }
+  releaseTargets {
         local {
 //            kubeContext = 'docker-for-desktop'
         }
-        nonlive {
-//            kubeContext = 'aws'
-//            atomic = true
-        }
-    }
+  }
 
 }
 /*
@@ -166,12 +159,12 @@ composeUp.dependsOn composeBuild
 composePush.dependsOn composeBuild
 
 dockerRun{
-    name 'semantic-release'
-    image 'jghamburg/git-semantic-release'
-    volumes "${projectDir}": '/app'
-    ports '7080:5000'
-    daemonize false
-    clean true
-    command 'semantic-release', '-b', 'master', '--no-ci'
-    env 'GH_TOKEN': "${System.env.GH_TOKEN}", 'GIT_CREDENTIALS': "${System.env.GIT_CREDENTIALS}"
+  name 'semantic-release'
+  image 'jghamburg/git-semantic-release'
+  volumes "${projectDir}": '/app'
+  ports '7080:5000'
+  daemonize false
+  clean true
+  command 'semantic-release', '-b', 'master', '--no-ci'
+  env 'GH_TOKEN': "${System.env.GH_TOKEN}"
 }
