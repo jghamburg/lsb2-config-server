@@ -25,6 +25,7 @@ info:
 #
 # 
 spring:
+  application: lsb2-config-server
   config:
     use-legacy-processing: true  
   cloud:
